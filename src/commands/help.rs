@@ -4,7 +4,7 @@ pub fn run( options: &[CommandDataOption] ) -> String {
     let help = options.first().unwrap();
     let value = help.value.as_str().unwrap();
     match value {
-        "roll" => "Rolling value. Example /roll d10".to_owned(),
+        "roll" => "Rolling value. Example /roll x-sided: d10 number: 1".to_owned(),
         _ => String::new()
     }
 }
