@@ -5,7 +5,7 @@ pub fn run( options: &[CommandDataOption] ) -> String {
     let value = help.value.as_str().unwrap();
     match value {
         "roll" => "Rolling value. Example /roll x-sided: d10 number: 1".to_owned(),
-        _ => String::new()
+        _ => "Have to add command name.".to_owned()
     }
 }
 
