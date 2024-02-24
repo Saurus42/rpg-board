@@ -4,14 +4,18 @@ use serenity::{ all::CommandDataOption, builder::{CreateCommand, CreateCommandOp
 pub fn run( options: &[CommandDataOption] ) -> String {
     let roll = options[0].value.as_str().unwrap();
     let number = options[1].value.as_i64().unwrap();
-    let mut result = my_match( roll );
+    let num = my_match( roll );
+    let mut result = num.to_string();
+    let mut counter = num;
     for _n in 1..number {
-        result = format!( "{}+{}", result, my_match( roll ) );
+        let num = my_match( roll );
+        result = format!( "{}+{}", result, num );
+        counter += num;
     }
-    result
+    format!( "{}\n{}", result, counter )
 }
 
-fn my_match( roll: &str ) -> String {
+fn my_match( roll: &str ) -> u32 {
     match roll {
         "d4" => try_roll( 1, 4 ),
         "d6" => try_roll( 1, 6 ),
@@ -20,7 +24,7 @@ fn my_match( roll: &str ) -> String {
         "d12" => try_roll( 1, 12 ),
         "d20" => try_roll( 1, 20 ),
         "d100" => try_roll( 1, 100 ),
-        _ => "I don't know this option.".to_owned()
+        _ => 0
     }
 }
 
@@ -32,15 +36,6 @@ pub fn register() -> CreateCommand {
         ] )
 }
 
-fn try_roll( min: u32, max: u32 ) -> String {
-    rand::thread_rng().gen_range( min..=max ).to_string()
-}
-
-#[cfg(test)]
-mod test {
-    #[test]
-    fn try_roll() {
-        let result = super::try_roll( 0, 8 );
-        assert_eq!( result.len(), 1 );
-    }
+fn try_roll( min: u32, max: u32 ) -> u32 {
+    rand::thread_rng().gen_range( min..=max )
 }
