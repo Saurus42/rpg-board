@@ -1,6 +1,9 @@
 use serenity::{ all::CommandDataOption, builder::{CreateCommand, CreateCommandOption} };
 
 pub fn run( options: &[CommandDataOption] ) -> String {
+    if options.len() == 0 {
+        return String::from( "Example /roll x-sided: d10 number: 1." );
+    }
     let help = options.first().unwrap();
     let value = help.value.as_str().unwrap();
     match value {

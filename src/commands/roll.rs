@@ -1,7 +1,12 @@
 use rand::Rng;
 use serenity::{ all::CommandDataOption, builder::{CreateCommand, CreateCommandOption} };
 
+use crate::commands::help;
+
 pub fn run( options: &[CommandDataOption] ) -> String {
+    if options.len() < 2 {
+        return help::run( options );
+    }
     let roll = options[0].value.as_str().unwrap();
     let number = options[1].value.as_i64().unwrap();
     let num = my_match( roll );
@@ -17,7 +22,10 @@ pub fn run( options: &[CommandDataOption] ) -> String {
 
 fn my_match( roll: &str ) -> u32 {
     match roll {
+        "d2" => try_roll( 1, 2 ),
+        "d3" => try_roll( 1, 3 ),
         "d4" => try_roll( 1, 4 ),
+        "d5" => try_roll( 1, 5 ),
         "d6" => try_roll( 1, 6 ),
         "d8" => try_roll( 1, 8 ),
         "d10" => try_roll( 1, 10 ),

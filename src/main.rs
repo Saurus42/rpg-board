@@ -1,3 +1,4 @@
+use std::io::{ Error, ErrorKind };
 use serenity::{
     all::{ Command, Interaction, Ready },
     async_trait,
@@ -11,17 +12,18 @@ use dotenv::dotenv;
 mod commands;
 
 #[tokio::main( flavor = "current_thread" )]
-async fn main() {
+async fn main() -> Result<(), Error> {
     if let Err( why ) = dotenv() {
-        panic!( "{}", why.to_string() );
+        return Err( Error::new::<String>( ErrorKind::NotFound, why.to_string() ) );
     }
-    let client = Client::builder(std::env::var( "token" ).expect( "Don't have token." ), GatewayIntents::MESSAGE_CONTENT)
+    let client = Client::builder( std::env::var( "token" ).expect( "Don't have token." ), GatewayIntents::MESSAGE_CONTENT )
         .status( serenity::all::OnlineStatus::Online ).activity( ActivityData::listening( "/help" ) ).event_handler( BotHandler {} );
     if let Ok( mut bot ) = client.await {
         if let Err( why ) = bot.start().await {
-            panic!( "{}", why.to_string() );
+            return Err( Error::new::<String>( ErrorKind::AddrInUse, why.to_string() ) );
         }
     }
+    Ok( () )
 }
 
 struct BotHandler;
