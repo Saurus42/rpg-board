@@ -1,14 +1,17 @@
 use rand::Rng;
-use serenity::{ all::CommandDataOption, builder::{CreateCommand, CreateCommandOption} };
-
-use crate::commands::help;
+use serenity::{ all::CommandDataOption, builder::{ CreateCommand, CreateCommandOption } };
 
 pub fn run( options: &[CommandDataOption] ) -> String {
-    if options.len() < 2 {
-        return help::run( options );
+    if options.len() < 1 {
+        return format!( "/roll x-sided counter" );
     }
     let roll = options[0].value.as_str().unwrap();
-    let number = options[1].value.as_i64().unwrap();
+    let number;
+    if options.len() < 2 {
+        number = options[1].value.as_i64().unwrap();
+    } else {
+        number = 1;
+    }
     let num = my_match( roll );
     let mut result = num.to_string();
     let mut counter = num;
@@ -17,7 +20,11 @@ pub fn run( options: &[CommandDataOption] ) -> String {
         result = format!( "{}+{}", result, num );
         counter += num;
     }
-    format!( "{}\n{}", result, counter )
+    if number > 1 {
+        format!( "{}\n{}", result, counter )
+    } else {
+        format!( "{}", result )
+    }
 }
 
 fn my_match( roll: &str ) -> u32 {
@@ -40,7 +47,7 @@ pub fn register() -> CreateCommand {
     CreateCommand::new( "roll" ).description( "Rolling." )
         .set_options( vec![
             CreateCommandOption::new( serenity::all::CommandOptionType::String, "x-sided", "You enter the number of faces." ),
-            CreateCommandOption::new( serenity::all::CommandOptionType::Integer , "number", "Number to use x-sided." )
+            CreateCommandOption::new( serenity::all::CommandOptionType::Integer , "counter", "Number to use x-sided." )
         ] )
 }
 

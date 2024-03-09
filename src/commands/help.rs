@@ -7,7 +7,7 @@ pub fn run( options: &[CommandDataOption] ) -> String {
     let help = options.first().unwrap();
     let value = help.value.as_str().unwrap();
     match value {
-        "roll" => "Rolling value. Example /roll x-sided: d10 number: 1".to_owned(),
+        "roll" => "Random value. Physical dice such as d4, d6, d8, d10, d12, d20 and d100 are used to draw the values. Abstract dice that cannot physically exist, such as d2, d3, d5 and d50, have also been added.".to_owned(),
         _ => "Have to add command name.".to_owned()
     }
 }

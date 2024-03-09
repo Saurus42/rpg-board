@@ -1,6 +1,6 @@
 use std::io::{ Error, ErrorKind };
 use serenity::{
-    all::{ Command, Interaction, Ready },
+    all::{ Interaction, Ready },
     async_trait,
     builder::{ CreateInteractionResponse, CreateInteractionResponseMessage },
     gateway::ActivityData,
@@ -48,11 +48,14 @@ impl EventHandler for BotHandler {
     }
     async fn ready( &self, ctx: Context, ready: Ready ) {
         println!( "{} is connected!", ready.user.name );
-        if let Err( why ) = Command::create_global_command( &ctx.http , commands::roll::register()).await {
-            println!( "{}", why.to_string() );
-        }
-        if let Err( why ) = Command::create_global_command( &ctx.http , commands::help::register()).await {
-            println!( "{}", why.to_string() );
+        let guilds = ctx.cache.guilds();
+        for guild in guilds {
+            if let Err( why ) = guild.create_command( &ctx.http, commands::roll::register() ).await {
+                println!( "{}", why.to_string() );
+            }
+            if let Err( why ) = guild.create_command( &ctx.http, commands::help::register() ).await {
+                println!( "{}", why.to_string() );
+            }
         }
     }
 }
